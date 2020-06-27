@@ -7,6 +7,7 @@ require_once __BASEDIR__ . "vendor/Molecule/_boot.php";
 
 require_files([
     'firewalls/IsAuthenticatedUserFirewall',
+    'firewalls/HasCSRFTokenFirewall',
     'model/UserRepository',
         ],
         __BASEDIR__ . 'src/');
@@ -16,11 +17,10 @@ require_files(['config'],
 
 
 $wa = \Webapp::getInstance();
-$wa->basedir = __BASEDIR__ . 'src/';
 
+$wa->basedir = __BASEDIR__ ;
 
-$wa->addFirewalls([
-    'private/' => 'IsAuthenticatedUserFirewall',
-]);
+$wa->addFirewall('private/', 'IsAuthenticatedUserFirewall')
+   ->addFirewall('', 'HasCSRFTokenFirewall');
 
 $wa->dispatch('public/home');

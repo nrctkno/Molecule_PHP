@@ -40,6 +40,7 @@ class Webapp {
     $this->request = new Request();
     $this->session = new Session();
     $this->globals = [];
+    $this->firewalls = [];
   }
 
   public function setGlobal($name, $value) {
@@ -68,12 +69,14 @@ class Webapp {
     return $this->baseuri . "?mcl_a=$action" . $params;
   }
 
-  public function view_import($view) {
-    include $this->basedir . 'views/' . $view;
+  public function view_import($view, $vars = []) {
+    include $this->basedir . 'src/views/' . $view;
   }
 
-  public function addFirewalls($firewalls) {
-    $this->firewalls = $firewalls;
+  public function addFirewall($path, $firewall) {
+    $this->firewalls[$path] = $firewall;
+
+    return $this;
   }
 
   public function checkFirewalls($action) {
@@ -95,7 +98,7 @@ class Webapp {
 
     $this->checkFirewalls($a);
 
-    include_once $this->basedir . "actions/$a.php";
+    include_once $this->basedir . "src/actions/$a.php";
   }
 
   public function respondRedirect($action, $params = []) {

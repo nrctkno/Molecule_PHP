@@ -6,6 +6,7 @@
 class Session {
 
   const fb_id = 'flashbag';
+  const csrf_id = 'csrf_token';
 
   public function __construct() {
     session_start();
@@ -53,6 +54,22 @@ class Session {
 
   public function removeVar($name) {
     unset($_SESSION[$name]);
+  }
+
+  public function getCSRFId() {
+    return self::csrf_id;
+  }
+
+  public function getCSRFToken() {
+    if (empty($_SESSION[self::csrf_id])) {
+      $_SESSION[self::csrf_id] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION[self::csrf_id];
+  }
+
+  public function CSRFTokenInput() {
+    $token = $this->getCSRFToken();
+    return '<input type="hidden" name="' . self::csrf_id . '" value="' . $token . '">';
   }
 
 }
